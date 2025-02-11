@@ -14,7 +14,7 @@ A lightweight Go module that determines whether a given file is plaintext by ana
 ## Usage
 
 ```go
-import "github.com/UnitVectorY-Labs/isplaintextfile/filetype"
+import "github.com/UnitVectorY-Labs/isplaintextfile"
 ```
 
 1. Checking In-Memory Data
@@ -23,7 +23,7 @@ Use `IsPlaintextBytes` to determine if a byte slice contains valid plaintext:
 
 ```go
 data := []byte("Hello, World!\n")
-isText, err := filetype.IsPlaintextBytes(data)
+isText, err := isplaintextfile.IsPlaintextBytes(data)
 if err != nil {
     // Handle error.
 }
@@ -37,7 +37,7 @@ if isText {
 To analyze the entire content of a file, use `IsPlaintextPath`:
 
 ```go
-isText, err := filetype.IsPlaintextPath("example.txt")
+isText, err := isplaintextfile.IsPlaintextPath("example.txt")
 if err != nil {
     // Handle error.
 }
@@ -52,7 +52,7 @@ If you want to check only the first part of a file (e.g. the first N kilobytes),
 
 ```go
 // Check only the first 2KB of the file.
-isText, err := filetype.IsPlaintextPathPreview("example.txt", 2)
+isText, err := isplaintextfile.IsPlaintextPathPreview("example.txt", 2)
 if err != nil {
     // Handle error.
 }
@@ -67,7 +67,7 @@ For situations where the data comes from an io.Reader (such as a network stream)
 
 ```go
 // Assume 'reader' is an io.Reader.
-isText, err := filetype.IsPlaintextReader(reader)
+isText, err := isplaintextfile.IsPlaintextReader(reader)
 if err != nil {
     // Handle error.
 }
@@ -82,7 +82,7 @@ To analyze only the first portion of data from an io.Reader, use `IsPlaintextRea
 
 ```go
 // Check only the first 1KB from the reader.
-isText, err := filetype.IsPlaintextReaderPreview(reader, 1)
+isText, err := isplaintextfile.IsPlaintextReaderPreview(reader, 1)
 if err != nil {
     // Handle error.
 }
