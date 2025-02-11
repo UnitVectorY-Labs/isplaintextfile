@@ -1,4 +1,4 @@
-package filetype
+package isplaintextfile
 
 import (
 	"bytes"
