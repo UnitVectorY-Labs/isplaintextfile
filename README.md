@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT) [![Active](https://img.shields.io/badge/Status-Active-green)](https://guide.unitvectorylabs.com/bestpractices/status/#active) [![codecov](https://codecov.io/gh/UnitVectorY-Labs/isplaintextfile/graph/badge.svg?token=n9XfkxjvZt)](https://codecov.io/gh/UnitVectorY-Labs/isplaintextfile)
+[![GitHub release](https://img.shields.io/github/release/UnitVectorY-Labs/isplaintextfile.svg)](https://github.com/UnitVectorY-Labs/isplaintextfile/releases/latest) [![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT) [![Active](https://img.shields.io/badge/Status-Active-green)](https://guide.unitvectorylabs.com/bestpractices/status/#active) [![codecov](https://codecov.io/gh/UnitVectorY-Labs/isplaintextfile/graph/badge.svg?token=n9XfkxjvZt)](https://codecov.io/gh/UnitVectorY-Labs/isplaintextfile)
 
 # isplaintextfile
 
