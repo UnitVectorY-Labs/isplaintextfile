@@ -76,7 +76,7 @@ func TestPlaintextMethods(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run("IsPlaintextBytes_"+tt.name, func(t *testing.T) {
+		t.Run("Bytes_"+tt.name, func(t *testing.T) {
 			// For tests where no explicit limit is set, use a limit high enough to cover the entire content.
 			limitKB := tt.limitKB
 			if limitKB == 0 {
@@ -84,18 +84,18 @@ func TestPlaintextMethods(t *testing.T) {
 			}
 
 			// 1. Test the in-memory bytes variant (always processes the entire byte slice).
-			res, err := IsPlaintextBytes(tt.content)
+			res, err := Bytes(tt.content)
 			if err != nil {
-				t.Errorf("IsPlaintextBytes() error: %v", err)
+				t.Errorf("Bytes() error: %v", err)
 			}
 			if res != tt.unlimitedExpected {
-				t.Errorf("IsPlaintextBytes() = %v, want %v", res, tt.unlimitedExpected)
+				t.Errorf("Bytes() = %v, want %v", res, tt.unlimitedExpected)
 			}
 		})
 	}
 
 	for _, tt := range tests {
-		t.Run("IsPlaintextReader_"+tt.name, func(t *testing.T) {
+		t.Run("Reader_"+tt.name, func(t *testing.T) {
 			// For tests where no explicit limit is set, use a limit high enough to cover the entire content.
 			limitKB := tt.limitKB
 			if limitKB == 0 {
@@ -104,18 +104,18 @@ func TestPlaintextMethods(t *testing.T) {
 
 			// 2. Test the io.Reader variant (unlimited).
 			reader := bytes.NewReader(tt.content)
-			res, err := IsPlaintextReader(reader)
+			res, err := Reader(reader)
 			if err != nil {
-				t.Errorf("IsPlaintextReader() error: %v", err)
+				t.Errorf("Reader() error: %v", err)
 			}
 			if res != tt.unlimitedExpected {
-				t.Errorf("IsPlaintextReader() = %v, want %v", res, tt.unlimitedExpected)
+				t.Errorf("Reader() = %v, want %v", res, tt.unlimitedExpected)
 			}
 		})
 	}
 
 	for _, tt := range tests {
-		t.Run("IsPlaintextReaderPreview_"+tt.name, func(t *testing.T) {
+		t.Run("ReaderPreview_"+tt.name, func(t *testing.T) {
 			// For tests where no explicit limit is set, use a limit high enough to cover the entire content.
 			limitKB := tt.limitKB
 			if limitKB == 0 {
@@ -124,29 +124,29 @@ func TestPlaintextMethods(t *testing.T) {
 
 			// 3. Test the io.Reader-with-limit variant (limit specified in KB).
 			reader := bytes.NewReader(tt.content)
-			res, err := IsPlaintextReaderPreview(reader, limitKB)
+			res, err := ReaderPreview(reader, limitKB)
 			if err != nil {
-				t.Errorf("IsPlaintextReaderPreviewKB() error: %v", err)
+				t.Errorf("ReaderPreview() error: %v", err)
 			}
 			if res != tt.limitedExpected {
-				t.Errorf("IsPlaintextReaderPreviewKB() = %v, want %v", res, tt.limitedExpected)
+				t.Errorf("ReaderPreview() = %v, want %v", res, tt.limitedExpected)
 			}
 
 			// Test the io.Reader with a limit that is larger than the content.
 			reader = bytes.NewReader(tt.content)
-			res, err = IsPlaintextReaderPreview(reader, len(tt.content)+10)
+			res, err = ReaderPreview(reader, len(tt.content)+10)
 			if err != nil {
-				t.Errorf("IsPlaintextReaderPreviewKB() error: %v", err)
+				t.Errorf("ReaderPreview() error: %v", err)
 			}
 			if res != tt.unlimitedExpected {
-				t.Errorf("IsPlaintextReaderPreviewKB() = %v, want %v", res, tt.unlimitedExpected)
+				t.Errorf("ReaderPreview() = %v, want %v", res, tt.unlimitedExpected)
 			}
 
 		})
 	}
 
 	for _, tt := range tests {
-		t.Run("IsPlaintextPath_"+tt.name, func(t *testing.T) {
+		t.Run("File_"+tt.name, func(t *testing.T) {
 			// For tests where no explicit limit is set, use a limit high enough to cover the entire content.
 			limitKB := tt.limitKB
 			if limitKB == 0 {
@@ -168,19 +168,19 @@ func TestPlaintextMethods(t *testing.T) {
 			}
 
 			// 4. Test the file path variant (unlimited).
-			res, err := IsPlaintextPath(tmpfile.Name())
+			res, err := File(tmpfile.Name())
 			if err != nil {
-				t.Errorf("IsPlaintextPath() error: %v", err)
+				t.Errorf("File() error: %v", err)
 			}
 			if res != tt.unlimitedExpected {
-				t.Errorf("IsPlaintextPath() = %v, want %v", res, tt.unlimitedExpected)
+				t.Errorf("File() = %v, want %v", res, tt.unlimitedExpected)
 			}
 
 		})
 	}
 
 	for _, tt := range tests {
-		t.Run("IsPlaintextPathPreview_"+tt.name, func(t *testing.T) {
+		t.Run("FilePreview_"+tt.name, func(t *testing.T) {
 			// For tests where no explicit limit is set, use a limit high enough to cover the entire content.
 			limitKB := tt.limitKB
 			if limitKB == 0 {
@@ -202,21 +202,21 @@ func TestPlaintextMethods(t *testing.T) {
 			}
 
 			// 5. Test the file path-with-limit variant (limit specified in KB).
-			res, err := IsPlaintextPathPreview(tmpfile.Name(), limitKB)
+			res, err := FilePreview(tmpfile.Name(), limitKB)
 			if err != nil {
-				t.Errorf("IsPlaintextPathPreview() error: %v", err)
+				t.Errorf("FilePreview() error: %v", err)
 			}
 			if res != tt.limitedExpected {
-				t.Errorf("IsPlaintextPathPreview() = %v, want %v", res, tt.limitedExpected)
+				t.Errorf("FilePreview() = %v, want %v", res, tt.limitedExpected)
 			}
 
 			// Test the path-with-limit variant with a limit that is larger than the content.
-			res, err = IsPlaintextPathPreview(tmpfile.Name(), len(tt.content)+10)
+			res, err = FilePreview(tmpfile.Name(), len(tt.content)+10)
 			if err != nil {
-				t.Errorf("IsPlaintextPathPreview() error: %v", err)
+				t.Errorf("FilePreview() error: %v", err)
 			}
 			if res != tt.unlimitedExpected {
-				t.Errorf("IsPlaintextPathPreview() = %v, want %v", res, tt.unlimitedExpected)
+				t.Errorf("FilePreview() = %v, want %v", res, tt.unlimitedExpected)
 			}
 		})
 	}

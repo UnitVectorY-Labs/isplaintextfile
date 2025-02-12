@@ -51,14 +51,14 @@ func isPlaintextFromReader(reader io.Reader) (bool, error) {
 	return isBufferPlaintext(buffer), nil
 }
 
-// IsPlaintextBytes checks if the provided byte slice is valid plaintext.
-func IsPlaintextBytes(data []byte) (bool, error) {
+// Bytes checks if the provided byte slice is valid plaintext.
+func Bytes(data []byte) (bool, error) {
 	// In-memory data: no IO error is expected.
 	return isBufferPlaintext(data), nil
 }
 
-// IsPlaintextPath opens the file at the given path and checks if its entire content is plaintext.
-func IsPlaintextPath(path string) (bool, error) {
+// File opens the file at the given path and checks if its entire content is plaintext.
+func File(path string) (bool, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return false, err
@@ -68,9 +68,9 @@ func IsPlaintextPath(path string) (bool, error) {
 	return isPlaintextFromReader(file)
 }
 
-// IsPlaintextPathPreview opens the file at the given path, reads up to maxKB kilobytes,
+// FilePreview opens the file at the given path, reads up to maxKB kilobytes,
 // and checks if that portion of the file is plaintext.
-func IsPlaintextPathPreview(path string, maxKB int) (bool, error) {
+func FilePreview(path string, maxKB int) (bool, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return false, err
@@ -86,14 +86,14 @@ func IsPlaintextPathPreview(path string, maxKB int) (bool, error) {
 	return isPlaintextFromReader(limitedReader)
 }
 
-// IsPlaintextReader checks if the content provided by the io.Reader is plaintext.
-func IsPlaintextReader(reader io.Reader) (bool, error) {
+// Reader checks if the content provided by the io.Reader is plaintext.
+func Reader(reader io.Reader) (bool, error) {
 	return isPlaintextFromReader(reader)
 }
 
-// IsPlaintextReaderPreview checks if the content provided by the io.Reader is plaintext,
+// ReaderPreview checks if the content provided by the io.Reader is plaintext,
 // reading only up to maxKB kilobytes from the reader.
-func IsPlaintextReaderPreview(reader io.Reader, maxKB int) (bool, error) {
+func ReaderPreview(reader io.Reader, maxKB int) (bool, error) {
 	maxBytes := maxKB * 1024
 
 	if maxKB == 0 {

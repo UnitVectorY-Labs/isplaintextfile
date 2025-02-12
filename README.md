@@ -19,11 +19,11 @@ import "github.com/UnitVectorY-Labs/isplaintextfile"
 
 1. Checking In-Memory Data
 
-Use `IsPlaintextBytes` to determine if a byte slice contains valid plaintext:
+Use `Bytes` to determine if a byte slice contains valid plaintext:
 
 ```go
 data := []byte("Hello, World!\n")
-isText, err := isplaintextfile.IsPlaintextBytes(data)
+isText, err := isplaintextfile.Bytes(data)
 if err != nil {
     // Handle error.
 }
@@ -34,10 +34,10 @@ if isText {
 
 2. Checking a File by Path (Full Content)
 
-To analyze the entire content of a file, use `IsPlaintextPath`:
+To analyze the entire content of a file, use `File`:
 
 ```go
-isText, err := isplaintextfile.IsPlaintextPath("example.txt")
+isText, err := isplaintextfile.File("example.txt")
 if err != nil {
     // Handle error.
 }
@@ -48,11 +48,11 @@ if isText {
 
 3. Checking a File by Path (Preview Mode)
 
-If you want to check only the first part of a file (e.g. the first N kilobytes), use `IsPlaintextPathPreview`:
+If you want to check only the first part of a file (e.g. the first N kilobytes), use `FilePreview`:
 
 ```go
 // Check only the first 2KB of the file.
-isText, err := isplaintextfile.IsPlaintextPathPreview("example.txt", 2)
+isText, err := isplaintextfile.FilePreview("example.txt", 2)
 if err != nil {
     // Handle error.
 }
@@ -63,11 +63,11 @@ if isText {
 
 4. Checking Data from an io.Reader (Full Content)
 
-For situations where the data comes from an io.Reader (such as a network stream), use `IsPlaintextReader`:
+For situations where the data comes from an io.Reader (such as a network stream), use `Reader`:
 
 ```go
 // Assume 'reader' is an io.Reader.
-isText, err := isplaintextfile.IsPlaintextReader(reader)
+isText, err := isplaintextfile.Reader(reader)
 if err != nil {
     // Handle error.
 }
@@ -78,15 +78,14 @@ if isText {
 
 5. Checking an io.Reader in Preview Mode
 
-To analyze only the first portion of data from an io.Reader, use `IsPlaintextReaderPreview`:
+To analyze only the first portion of data from an io.Reader, use `ReaderPreview`:
 
 ```go
 // Check only the first 1KB from the reader.
-isText, err := isplaintextfile.IsPlaintextReaderPreview(reader, 1)
+isText, err := isplaintextfile.ReaderPreview(reader, 1)
 if err != nil {
     // Handle error.
 }
 if isText {
     // The preview (first 1KB) of the stream is plaintext.
 }
-```
