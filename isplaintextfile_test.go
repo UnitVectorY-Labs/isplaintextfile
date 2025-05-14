@@ -77,12 +77,6 @@ func TestPlaintextMethods(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run("Bytes_"+tt.name, func(t *testing.T) {
-			// For tests where no explicit limit is set, use a limit high enough to cover the entire content.
-			limitKB := tt.limitKB
-			if limitKB == 0 {
-				limitKB = (len(tt.content) + 1023) / 1024
-			}
-
 			// 1. Test the in-memory bytes variant (always processes the entire byte slice).
 			res, err := Bytes(tt.content)
 			if err != nil {
@@ -96,12 +90,6 @@ func TestPlaintextMethods(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run("Reader_"+tt.name, func(t *testing.T) {
-			// For tests where no explicit limit is set, use a limit high enough to cover the entire content.
-			limitKB := tt.limitKB
-			if limitKB == 0 {
-				limitKB = (len(tt.content) + 1023) / 1024
-			}
-
 			// 2. Test the io.Reader variant (unlimited).
 			reader := bytes.NewReader(tt.content)
 			res, err := Reader(reader)
@@ -147,12 +135,6 @@ func TestPlaintextMethods(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run("File_"+tt.name, func(t *testing.T) {
-			// For tests where no explicit limit is set, use a limit high enough to cover the entire content.
-			limitKB := tt.limitKB
-			if limitKB == 0 {
-				limitKB = (len(tt.content) + 1023) / 1024
-			}
-
 			// For file-based tests, create a temporary file with the test content.
 			tmpfile, err := os.CreateTemp("", "plaintext_test")
 			if err != nil {
