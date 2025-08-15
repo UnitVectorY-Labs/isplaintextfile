@@ -1,3 +1,3 @@
 module github.com/UnitVectorY-Labs/isplaintextfile
 
-go 1.24.6 // GOVERSION
+go 1.25.0 // GOVERSION
