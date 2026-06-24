@@ -18,7 +18,7 @@ func isBufferPlaintext(buffer []byte) bool {
 		r, size := utf8.DecodeRune(buffer[pos:])
 
 		// Check for control characters (except whitespace)
-		if r < 32 && r != '\n' && r != '\r' && r != '\t' {
+		if (r < 32 && r != '\n' && r != '\r' && r != '\t') || r == 0x7F {
 			return false
 		}
 
@@ -27,8 +27,27 @@ func isBufferPlaintext(buffer []byte) bool {
 	return true
 }
 
+// trimIncompleteUTF8 removes any trailing incomplete UTF-8 byte sequence from the buffer.
+// This is used in preview mode where the read limit may split a multi-byte character.
+func trimIncompleteUTF8(data []byte) []byte {
+	if len(data) == 0 || utf8.Valid(data) {
+		return data
+	}
+	// Try trimming 1 to 3 trailing bytes to find a valid UTF-8 boundary.
+	// UTF-8 characters are at most 4 bytes, so an incomplete trailing
+	// sequence is at most 3 bytes.
+	for i := 1; i <= 3 && i <= len(data); i++ {
+		if utf8.Valid(data[:len(data)-i]) {
+			return data[:len(data)-i]
+		}
+	}
+	return data
+}
+
 // isPlaintextFromReader reads from the given reader and checks if the content is valid plaintext.
-func isPlaintextFromReader(reader io.Reader) (bool, error) {
+// If preview is true, incomplete trailing UTF-8 sequences are trimmed before validation,
+// since the read limit may have split a multi-byte character.
+func isPlaintextFromReader(reader io.Reader, preview bool) (bool, error) {
 	buffer := make([]byte, 0, 32*1024)
 	tempBuf := make([]byte, 1024)
 
@@ -48,6 +67,14 @@ func isPlaintextFromReader(reader io.Reader) (bool, error) {
 	if len(buffer) == 0 {
 		return true, nil
 	}
+
+	if preview {
+		buffer = trimIncompleteUTF8(buffer)
+		if len(buffer) == 0 {
+			return true, nil
+		}
+	}
+
 	return isBufferPlaintext(buffer), nil
 }
 
@@ -65,41 +92,39 @@ func File(path string) (bool, error) {
 	}
 	defer file.Close()
 
-	return isPlaintextFromReader(file)
+	return isPlaintextFromReader(file, false)
 }
 
 // FilePreview opens the file at the given path, reads up to maxKB kilobytes,
 // and checks if that portion of the file is plaintext.
 func FilePreview(path string, maxKB int) (bool, error) {
+	if maxKB <= 0 {
+		return false, errors.New("invalid length: maxKB must be greater than 0")
+	}
+
 	file, err := os.Open(path)
 	if err != nil {
 		return false, err
 	}
 	defer file.Close()
 
-	if maxKB == 0 {
-		return true, errors.New("invalid length: maxKB must be greater than 0")
-	}
-
 	// Limit the reader to maxKB*1024 bytes.
 	limitedReader := io.LimitReader(file, int64(maxKB*1024))
-	return isPlaintextFromReader(limitedReader)
+	return isPlaintextFromReader(limitedReader, true)
 }
 
 // Reader checks if the content provided by the io.Reader is plaintext.
 func Reader(reader io.Reader) (bool, error) {
-	return isPlaintextFromReader(reader)
+	return isPlaintextFromReader(reader, false)
 }
 
 // ReaderPreview checks if the content provided by the io.Reader is plaintext,
 // reading only up to maxKB kilobytes from the reader.
 func ReaderPreview(reader io.Reader, maxKB int) (bool, error) {
-	maxBytes := maxKB * 1024
-
-	if maxKB == 0 {
-		return true, errors.New("invalid length: maxKB must be greater than 0")
+	if maxKB <= 0 {
+		return false, errors.New("invalid length: maxKB must be greater than 0")
 	}
 
-	limitedReader := io.LimitReader(reader, int64(maxBytes))
-	return isPlaintextFromReader(limitedReader)
+	limitedReader := io.LimitReader(reader, int64(maxKB*1024))
+	return isPlaintextFromReader(limitedReader, true)
 }
