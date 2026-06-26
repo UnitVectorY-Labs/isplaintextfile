@@ -1,0 +1,12 @@
+name: isplaintextfile
+default_branch: main
+config:
+  description: "A lightweight Go module that determines whether a given file is plaintext by analyzing its content."
+  license: MIT
+  language: go
+  release: build-go
+  release_github: true
+  status: active
+  codecov:
+    enabled: true
+    token: n9XfkxjvZt
