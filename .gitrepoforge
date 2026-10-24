@@ -1,6 +1,7 @@
 name: isplaintextfile
 default_branch: main
 config:
+  osv: sarif
   description: "A lightweight Go module that determines whether a given file is plaintext by analyzing its content."
   license: MIT
   language: go
