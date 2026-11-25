@@ -8,6 +8,3 @@ config:
   release: build-go
   release_github: true
   status: active
-  codecov:
-    enabled: true
-    token: n9XfkxjvZt
